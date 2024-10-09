@@ -17,6 +17,10 @@ const RnAppShortcuts = NativeModules.RnAppShortcuts
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return RnAppShortcuts.multiply(a, b);
+export function popInitialAction(): Promise<void> {
+  return RnAppShortcuts.popInitialAction();
+}
+
+export function setShortcutItems(items: any) {
+  RnAppShortcuts.setShortcutItems(items);
 }
