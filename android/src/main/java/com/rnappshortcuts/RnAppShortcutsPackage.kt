@@ -9,14 +9,14 @@ import com.facebook.react.uimanager.ViewManager
 class RnAppShortcutsPackage : ReactPackage {
 
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-    return listOf(RnAppShortcutsModule(reactContext))
-  }
-
-  fun createJSModules(): List<Class<out JavaScriptModule?>> {
-    return emptyList()
+    return listOf<NativeModule>(RnAppShortcutsModule(reactContext))
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+    return emptyList()
+  }
+
+  fun createJSModules(): List<Class<out JavaScriptModule?>> {
     return emptyList()
   }
 }

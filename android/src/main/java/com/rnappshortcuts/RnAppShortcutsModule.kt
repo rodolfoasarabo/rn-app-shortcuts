@@ -7,7 +7,6 @@ import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.os.PersistableBundle
-import android.util.Log
 import com.facebook.react.bridge.ActivityEventListener
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -22,7 +21,11 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 class RnAppShortcutsModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext), ActivityEventListener {
 
-  override fun onActivityResult(p0: Activity?, p1: Int, p2: Int, p3: Intent?) {
+  init {
+    reactContext.addActivityEventListener(this)
+  }
+
+  override fun onActivityResult(p0: Activity?, p1: Int, p2: Int, intent: Intent?) {
     // Do nothing
   }
 
@@ -99,14 +102,10 @@ class RnAppShortcutsModule(reactContext: ReactApplicationContext) :
   }
 
   private fun sendJSEvent(intent: Intent) {
-    Log.d("SHORTCUTS", "sendJSEvent")
-
     if (intent.action != ACTION_SHORTCUT) return
-    Log.d("SHORTCUTS", "sendJSEvent")
 
     val bundle = intent.getParcelableExtra<PersistableBundle>(SHORTCUT_ITEM)
 
-    Log.d("SHORTCUTS", "Bundle: $bundle")
     bundle?.let {
       val item = ShortcutItem.fromPersistableBundle(it)
 
