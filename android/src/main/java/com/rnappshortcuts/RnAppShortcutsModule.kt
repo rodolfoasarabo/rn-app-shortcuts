@@ -19,23 +19,17 @@ import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
 @ReactModule(name = RnAppShortcutsModule.REACT_NAME)
-class RnAppShortcutsModule: ReactContextBaseJavaModule {
+class RnAppShortcutsModule(reactContext: ReactApplicationContext) :
+  ReactContextBaseJavaModule(reactContext), ActivityEventListener {
 
-  constructor(reactContext: ReactApplicationContext) {
-    reactContext.addActivityEventListener(object : ActivityEventListener {
-      override fun onActivityResult(
-        activity: Activity,
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-      ) {
-        // Do nothing
-      }
+  override fun onActivityResult(p0: Activity?, p1: Int, p2: Int, p3: Intent?) {
+    // Do nothing
+  }
 
-      override fun onNewIntent(intent: Intent) {
-        sendJSEvent(intent)
-      }
-    })
+  override fun onNewIntent(intent: Intent?) {
+    intent?.let {
+      sendJSEvent(it)
+    }
   }
 
   override fun getName(): String {
