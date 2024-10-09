@@ -101,7 +101,7 @@ class RnAppShortcutsModule
 
       reactApplicationContext
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        .emit("RnQuickActions", item.toWritableMap())
+        .emit("RnAppShortcuts", item.toWritableMap())
     }
   }
 
@@ -112,22 +112,21 @@ class RnAppShortcutsModule
   }
 
   init {
-    // Ver como implementar o onNewIntent
-//    reactContext.addActivityEventListener(
-//      object : ActivityEventListener {
-//        override fun onActivityResult(
-//          activity: Activity,
-//          requestCode: Int,
-//          resultCode: Int,
-//          data: Intent?
-//        ) {
-//          // Do nothing
-//        }
-//
-//        override fun onNewIntent(intent: Intent) {
-//          sendJSEvent(intent)
-//        }
-//      }
-//    )
+    reactContext.addActivityEventListener(
+      object : ActivityEventListener {
+        override fun onActivityResult(
+          activity: Activity,
+          requestCode: Int,
+          resultCode: Int,
+          data: Intent?
+        ) {
+          // Do nothing
+        }
+
+        override fun onNewIntent(intent: Intent) {
+          sendJSEvent(intent)
+        }
+      }
+    )
   }
 }
