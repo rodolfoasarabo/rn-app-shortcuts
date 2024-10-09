@@ -12,6 +12,10 @@ class RnAppShortcutsPackage : ReactPackage {
     return listOf(RnAppShortcutsModule(reactContext))
   }
 
+  fun createJSModules(): List<Class<out JavaScriptModule?>> {
+    return emptyList()
+  }
+
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
     return emptyList()
   }

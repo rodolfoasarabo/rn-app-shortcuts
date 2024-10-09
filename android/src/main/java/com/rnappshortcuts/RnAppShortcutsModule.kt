@@ -15,13 +15,15 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
+@ReactModule(name = RnAppShortcutsModule.REACT_NAME)
 class RnAppShortcutsModule
   (reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
   override fun getName(): String {
-    return NAME
+    return REACT_NAME
   }
 
   private var actionAlreadyExecuted = false
@@ -29,7 +31,6 @@ class RnAppShortcutsModule
   @ReactMethod
   fun popInitialAction(promise: Promise?) {
     try {
-      Log.d("popInitialAction", "chegou")
       val currentActivity = currentActivity
       var map: WritableMap? = null
 
@@ -67,19 +68,14 @@ class RnAppShortcutsModule
     for (i in 0 until items.size()) {
       val item = ShortcutItem.fromReadableMap(items.getMap(i))
       val iconResId = context.resources.getIdentifier(item.icon, "drawable", context.packageName)
-      val intent =
-        Intent(context, currentActivity::class.java).apply {
-          action = ACTION_SHORTCUT
-          putExtra(SHORTCUT_ITEM, item.toPersistableBundle())
-        }
+      val intent = Intent(context, currentActivity::class.java).apply {
+        action = ACTION_SHORTCUT
+        putExtra(SHORTCUT_ITEM, item.toPersistableBundle())
+      }
 
       shortcuts.add(
-        ShortcutInfo.Builder(context, item.title)
-          .setShortLabel(item.title)
-          .setLongLabel(item.title)
-          .setIcon(Icon.createWithResource(context, iconResId))
-          .setIntent(intent)
-          .build()
+        ShortcutInfo.Builder(context, item.title).setShortLabel(item.title).setLongLabel(item.title)
+          .setIcon(Icon.createWithResource(context, iconResId)).setIntent(intent).build()
       )
     }
 
@@ -93,40 +89,40 @@ class RnAppShortcutsModule
   }
 
   private fun sendJSEvent(intent: Intent) {
+    Log.d("SHORTCUTS", "sendJSEvent")
+
     if (intent.action != ACTION_SHORTCUT) return
+    Log.d("SHORTCUTS", "sendJSEvent")
 
     val bundle = intent.getParcelableExtra<PersistableBundle>(SHORTCUT_ITEM)
+
+    Log.d("SHORTCUTS", "Bundle: $bundle")
     bundle?.let {
       val item = ShortcutItem.fromPersistableBundle(it)
 
-      reactApplicationContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        .emit("RnAppShortcuts", item.toWritableMap())
+      reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        .emit("appShortcuts", item.toWritableMap())
     }
   }
 
   companion object {
-    const val NAME = "RnAppShortcuts"
+    const val REACT_NAME = "RnAppShortcuts"
     private const val ACTION_SHORTCUT = "ACTION_SHORTCUT"
     private const val SHORTCUT_ITEM = "SHORTCUT_ITEM"
   }
 
   init {
-    reactContext.addActivityEventListener(
-      object : ActivityEventListener {
-        override fun onActivityResult(
-          activity: Activity,
-          requestCode: Int,
-          resultCode: Int,
-          data: Intent?
-        ) {
-          // Do nothing
-        }
-
-        override fun onNewIntent(intent: Intent) {
-          sendJSEvent(intent)
-        }
+    reactContext.addActivityEventListener(object : ActivityEventListener {
+      override fun onActivityResult(
+        activity: Activity, requestCode: Int, resultCode: Int, data: Intent?
+      ) {
+        // Do nothing
       }
-    )
+
+      override fun onNewIntent(intent: Intent) {
+        Log.d("SHORTCUTS", "onNewIntent")
+        sendJSEvent(intent)
+      }
+    })
   }
 }
