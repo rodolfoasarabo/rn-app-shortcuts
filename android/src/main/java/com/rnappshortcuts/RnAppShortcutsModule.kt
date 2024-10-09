@@ -19,8 +19,24 @@ import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
 @ReactModule(name = RnAppShortcutsModule.REACT_NAME)
-class RnAppShortcutsModule
-  (reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class RnAppShortcutsModule: ReactContextBaseJavaModule {
+
+  constructor(reactContext: ReactApplicationContext) {
+    reactContext.addActivityEventListener(object : ActivityEventListener {
+      override fun onActivityResult(
+        activity: Activity,
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+      ) {
+        // Do nothing
+      }
+
+      override fun onNewIntent(intent: Intent) {
+        sendJSEvent(intent)
+      }
+    })
+  }
 
   override fun getName(): String {
     return REACT_NAME
@@ -109,20 +125,5 @@ class RnAppShortcutsModule
     const val REACT_NAME = "RnAppShortcuts"
     private const val ACTION_SHORTCUT = "ACTION_SHORTCUT"
     private const val SHORTCUT_ITEM = "SHORTCUT_ITEM"
-  }
-
-  init {
-    reactContext.addActivityEventListener(object : ActivityEventListener {
-      override fun onActivityResult(
-        activity: Activity, requestCode: Int, resultCode: Int, data: Intent?
-      ) {
-        // Do nothing
-      }
-
-      override fun onNewIntent(intent: Intent) {
-        Log.d("SHORTCUTS", "onNewIntent")
-        sendJSEvent(intent)
-      }
-    })
   }
 }
