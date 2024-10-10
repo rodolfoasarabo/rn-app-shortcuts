@@ -79,9 +79,9 @@ A full list of available icons can be found here:
 In order to add / remove dynamic actions during application lifecycle, you need to import `rn-app-shortcuts` and call either `setShortcutItems` to set actions or `clearShortcutItems` to clear.
 
 ```js
-import RnAppShortcuts from "rn-app-shortcuts";
+import { setShortcutItems } from "rn-app-shortcuts";
 
-RnAppShortcuts.setShortcutItems([
+setShortcutItems([
   {
     type: "Orders", // Required
     title: "See your orders", // Optional, if empty, `type` will be used instead
@@ -97,7 +97,9 @@ RnAppShortcuts.setShortcutItems([
 To clear actions:
 
 ```js
-RnAppShortcuts.clearShortcutItems();
+import { clearShortcutItems } from "rn-app-shortcuts";
+
+clearShortcutItems();
 ```
 
 #### Icons
@@ -107,8 +109,6 @@ RnAppShortcuts.clearShortcutItems();
 On iOS you can use the default icons provided by Apple, they're listed here: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/system-icons/#quick-action-icons
 
 You can also use custom icons creating new Image set inside Image.xcassets on XCode. You'll need to define the 1x, 2x and 3x sizes.
-
-![](/assets/ios.png)
 
 ##### Android
 
@@ -138,7 +138,7 @@ DeviceEventEmitter.addListener("appShortcuts", data => {
 To get any actions sent when the app is cold-launched using the following code:
 
 ```js
-import RnAppShortcuts from "rn-app-shortcuts";
+import { popInitialAction } from "rn-app-shortcuts";
 
 function doSomethingWithTheAction(data) {
   console.log(data.title);
@@ -146,12 +146,12 @@ function doSomethingWithTheAction(data) {
   console.log(data.userInfo);
 }
 
-RnAppShortcuts.popInitialAction()
+popInitialAction()
   .then(doSomethingWithTheAction)
   .catch(console.error);
 ```
 
-Please note that on Android if android:launchMode is set to default value standard in AndroidManifest.xml, the app will be re-created each time when app is being brought back from background and it won't receive appShortcuts event from DeviceEventEmitter, instead popInitialAction will be receiving the app shortcut event.
+Please note that on Android if android:launchMode is set to default value standard in AndroidManifest.xml, the app will be re-created each time when app is being brought back from background and it won't receive `appShortcuts` event from `DeviceEventEmitter`, instead `popInitialAction` will be receiving the app shortcut event.
 
 ## Contributing
 
@@ -164,3 +164,5 @@ MIT
 ---
 
 Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+
+Inspiration: [react-native-quick-action](https://github.com/jordanbyron/react-native-quick-actions)
