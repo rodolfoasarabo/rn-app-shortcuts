@@ -8,5 +8,5 @@
 #import <React/RCTBridgeModule.h>
 
 @interface RNAppShortcutsManager : NSObject <RCTBridgeModule>
-+(void) onQuickActionPress:(UIApplicationShortcutItem *) shortcutItem completionHandler:(void (^)(BOOL succeeded)) completionHandler;
++(void) onShortcutItemPress:(UIApplicationShortcutItem *) shortcutItem completionHandler:(void (^)(BOOL succeeded)) completionHandler;
 @end
