@@ -1,6 +1,6 @@
 {
   "name": "rn-app-shortcuts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Android App Shortcuts & iOS Quick Actions",
   "keywords": [
     "react-native",
@@ -141,5 +141,6 @@
     "type": "module-legacy",
     "languages": "kotlin-swift",
     "version": "0.41.2"
-  }
+  },
+  "type": "module"
 }
